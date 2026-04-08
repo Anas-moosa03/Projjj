@@ -53,7 +53,8 @@ module.exports = async (req, res) => {
         });
 
       if (uploadError) {
-        return res.status(500).json({ error: "Upload failed" });
+        console.error("Supabase upload error:", uploadError);
+        return res.status(500).json({ error: uploadError.message || "Upload failed" });
       }
 
       const { data } = supabase.storage.from(BUCKET).getPublicUrl(fileName);
@@ -68,6 +69,7 @@ module.exports = async (req, res) => {
 
       return res.status(201).json(rows[0]);
     } catch (error) {
+      console.error("Submission handler error:", error);
       const message = error && error.message ? error.message : "Upload failed";
       return res.status(500).json({ error: message });
     }
