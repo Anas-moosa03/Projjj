@@ -16,10 +16,12 @@ const ensureTables = async () => {
           name text NOT NULL,
           description text NOT NULL,
           image_url text NOT NULL,
+          image_path text,
           likes integer NOT NULL DEFAULT 0,
           created_at timestamptz NOT NULL DEFAULT now()
         );
       `;
+      await sql`ALTER TABLE submissions ADD COLUMN IF NOT EXISTS image_path text;`;
     } finally {
       await sql`SELECT pg_advisory_unlock(${lockId});`;
     }

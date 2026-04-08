@@ -31,7 +31,10 @@ const renderSubmissions = () => {
       <p class="card-desc">${item.description}</p>
       <div class="card-footer">
         <span>${formatDate(item.created_at)}</span>
-        <button class="like-btn" data-id="${item.id}">❤ إعجاب <strong>${item.likes}</strong></button>
+        <div class="card-actions">
+          <button class="like-btn" data-id="${item.id}" type="button">❤ إعجاب <strong>${item.likes}</strong></button>
+          <button class="trash-btn" data-id="${item.id}" type="button" aria-label="حذف المشاركة">🗑 حذف</button>
+        </div>
       </div>
     `;
     storyList.appendChild(li);
@@ -85,10 +88,22 @@ form.addEventListener("submit", async (event) => {
 });
 
 storyList.addEventListener("click", async (event) => {
-  const button = event.target.closest(".like-btn");
-  if (!button) return;
+  const trashButton = event.target.closest(".trash-btn");
+  if (trashButton) {
+    const { id } = trashButton.dataset;
+    try {
+      await fetchJSON(`/api/submissions/${id}`, { method: "DELETE" });
+      await loadSubmissions();
+    } catch (error) {
+      alert(error.message);
+    }
+    return;
+  }
 
-  const { id } = button.dataset;
+  const likeButton = event.target.closest(".like-btn");
+  if (!likeButton) return;
+
+  const { id } = likeButton.dataset;
   try {
     await fetchJSON(`/api/submissions/${id}/like`, { method: "POST" });
     await loadSubmissions();

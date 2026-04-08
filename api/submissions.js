@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
 
   if (req.method === "GET") {
     const { rows } = await sql`
-      SELECT id, title, name, description, image_url, likes, created_at
+      SELECT id, title, name, description, image_url, image_path, likes, created_at
       FROM submissions
       ORDER BY likes DESC, created_at DESC
     `;
@@ -65,9 +65,9 @@ module.exports = async (req, res) => {
 
       const id = crypto.randomUUID();
       const { rows } = await sql`
-        INSERT INTO submissions (id, title, name, description, image_url)
-        VALUES (${id}, ${title}, ${name}, ${description}, ${imageUrl})
-        RETURNING id, title, name, description, image_url, likes, created_at
+        INSERT INTO submissions (id, title, name, description, image_url, image_path)
+        VALUES (${id}, ${title}, ${name}, ${description}, ${imageUrl}, ${fileName})
+        RETURNING id, title, name, description, image_url, image_path, likes, created_at
       `;
 
       return res.status(201).json(rows[0]);
