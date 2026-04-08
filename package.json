@@ -1,0 +1,9 @@
+{
+  "name": "uae-strongsite",
+  "private": true,
+  "dependencies": {
+    "@vercel/postgres": "^0.8.0",
+    "@supabase/supabase-js": "^2.49.1",
+    "formidable": "^3.5.2"
+  }
+}
