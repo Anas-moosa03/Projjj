@@ -1,7 +1,7 @@
 ﻿const crypto = require("crypto");
 const fs = require("fs/promises");
 const path = require("path");
-const formidable = require("formidable");
+const { IncomingForm } = require("formidable");
 const supabase = require("./_supabase");
 const { sql, ensureTables } = require("./_db");
 
@@ -9,7 +9,10 @@ const BUCKET = process.env.SUPABASE_BUCKET || "images";
 
 const parseForm = (req) =>
   new Promise((resolve, reject) => {
-    const form = formidable({ multiples: false, maxFileSize: 10 * 1024 * 1024 });
+    const form = new IncomingForm({
+      multiples: false,
+      maxFileSize: 10 * 1024 * 1024,
+    });
     form.parse(req, (err, fields, files) => {
       if (err) return reject(err);
       resolve({ fields, files });
