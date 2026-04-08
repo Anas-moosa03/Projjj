@@ -157,6 +157,11 @@ body {
   font-size: 14px;
 }
 
+.hint {
+  font-size: 12px;
+  color: #a9bdd6;
+}
+
 .field input,
 .field textarea {
   width: 100%;
