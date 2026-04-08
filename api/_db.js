@@ -1,17 +1,31 @@
 ﻿const { sql } = require("@vercel/postgres");
 
+let initPromise = null;
+
 const ensureTables = async () => {
-  await sql`
-    CREATE TABLE IF NOT EXISTS submissions (
-      id text PRIMARY KEY,
-      title text NOT NULL,
-      name text NOT NULL,
-      description text NOT NULL,
-      image_url text NOT NULL,
-      likes integer NOT NULL DEFAULT 0,
-      created_at timestamptz NOT NULL DEFAULT now()
-    );
-  `;
+  if (initPromise) return initPromise;
+
+  initPromise = (async () => {
+    const lockId = 914227;
+    await sql`SELECT pg_advisory_lock(${lockId});`;
+    try {
+      await sql`
+        CREATE TABLE IF NOT EXISTS submissions (
+          id text PRIMARY KEY,
+          title text NOT NULL,
+          name text NOT NULL,
+          description text NOT NULL,
+          image_url text NOT NULL,
+          likes integer NOT NULL DEFAULT 0,
+          created_at timestamptz NOT NULL DEFAULT now()
+        );
+      `;
+    } finally {
+      await sql`SELECT pg_advisory_unlock(${lockId});`;
+    }
+  })();
+
+  return initPromise;
 };
 
 const getJsonBody = async (req) => {
