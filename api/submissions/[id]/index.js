@@ -1,5 +1,5 @@
-﻿const supabase = require("../_supabase");
-const { sql, ensureTables } = require("../_db");
+﻿const supabase = require("../../_supabase");
+const { sql, ensureTables } = require("../../_db");
 
 const BUCKET = process.env.SUPABASE_BUCKET || "images";
 

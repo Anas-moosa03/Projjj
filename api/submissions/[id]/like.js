@@ -1,4 +1,4 @@
-﻿const { sql, ensureTables } = require("../_db");
+﻿const { sql, ensureTables } = require("../../_db");
 
 module.exports = async (req, res) => {
   await ensureTables();
