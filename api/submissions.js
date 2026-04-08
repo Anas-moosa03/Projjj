@@ -68,7 +68,8 @@ module.exports = async (req, res) => {
 
       return res.status(201).json(rows[0]);
     } catch (error) {
-      return res.status(500).json({ error: "Upload failed" });
+      const message = error && error.message ? error.message : "Upload failed";
+      return res.status(500).json({ error: message });
     }
   }
 
